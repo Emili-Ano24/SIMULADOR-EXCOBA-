@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MED-ADMIT UG</title>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.23.5/babel.min.js"></script>
+<style>
+:root {
+  --bg: #0f1419;
+  --bg2: #161d26;
+  --bg3: #1e2834;
+  --border: #2a3a4a;
+  --border2: #344554;
+  --text: #e8f0f8;
+  --text2: #8fa8c0;
+  --text3: #5a7a95;
+  --accent: #1da8a0;
+  --accent2: #16857e;
+  --accent3: #0d5f5a;
+  --green: #22c55e;
+  --red: #ef4444;
+  --yellow: #f59e0b;
+  --blue: #3b82f6;
+  --purple: #8b5cf6;
+  --card-r: 10px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+button{cursor:pointer;border:none;font-family:inherit}
+input,textarea,select{font-family:inherit;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:8px 12px;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.app{display:flex;min-height:100vh}
+.sidebar{width:240px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-logo{padding:20px;border-bottom:1px solid var(--border)}
+.logo-main{font-size:18px;font-weight:700;color:var(--accent);letter-spacing:-.5px}
+.logo-sub{font-size:10px;color:var(--text3);margin-top:2px}
+.sidebar-nav{padding:12px 0;flex:1}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;color:var(--text2);font-size:13px;cursor:pointer;transition:all .15s;border-left:3px solid transparent}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--bg3);color:var(--accent);border-left-color:var(--accent)}
+.nav-icon{font-size:16px;width:20px;text-align:center}
+.nav-label{flex:1}
+.nav-badge{background:var(--accent);color:#fff;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:600}
+.main{flex:1;overflow-y:auto}
+.page{padding:24px;max-width:1100px}
+.page-header{margin-bottom:24px}
+.page-title{font-size:22px;font-weight:700;color:var(--text)}
+.page-sub{font-size:13px;color:var(--text2);margin-top:4px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--card-r);padding:20px}
+.card-sm{padding:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--card-r);padding:16px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.stat-card.teal::before{background:var(--accent)}
+.stat-card.green::before{background:var(--green)}
+.stat-card.yellow::before{background:var(--yellow)}
+.stat-card.red::before{background:var(--red)}
+.stat-card.blue::before{background:var(--blue)}
+.stat-card.purple::before{background:var(--purple)}
+.stat-val{font-size:28px;font-weight:700;line-height:1}
+.stat-lbl{font-size:11px;color:var(--text3);margin-top:6px;text-transform:uppercase;letter-spacing:.5px}
+.stat-sub{font-size:12px;color:var(--text2);margin-top:4px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:7px;font-size:13px;font-weight:500;transition:all .15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2)}
+.btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-lg{padding:12px 24px;font-size:15px}
+.tag{display:inline-flex;align-items:center;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.tag-green{background:rgba(34,197,94,.15);color:var(--green)}
+.tag-red{background:rgba(239,68,68,.15);color:var(--red)}
+.tag-yellow{background:rgba(245,158,11,.15);color:var(--yellow)}
+.tag-blue{background:rgba(59,130,246,.15);color:var(--blue)}
+.tag-teal{background:rgba(29,168,160,.15);color:var(--accent)}
+.tag-purple{background:rgba(139,92,246,.15);color:var(--purple)}
+.progress-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .3s}
+.section-title{font-size:14px;font-weight:600;color:var(--text2);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+.divider{border:none;border-top:1px solid var(--border);margin:16px 0}
+.alert{padding:12px 16px;border-radius:7px;font-size:13px;margin-bottom:16px}
+.alert-info{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);color:#93c5fd}
+.alert-warn{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#fcd34d}
+.alert-success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#86efac}
+.alert-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5}
+.flex{display:flex}
+.flex-col{display:flex;flex-direction:column}
+.gap-2{gap:8px}
+.gap-3{gap:12px}
+.gap-4{gap:16px}
+.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+.justify-center{justify-content:center}
+.mt-2{margin-top:8px}
+.mt-3{margin-top:12px}
+.mt-4{margin-top:16px}
+.mb-2{margin-bottom:8px}
+.mb-3{margin-bottom:12px}
+.mb-4{margin-bottom:16px}
+.text-sm{font-size:13px}
+.text-xs{font-size:11px}
+.text-accent{color:var(--accent)}
+.text-green{color:var(--green)}
+.text-red{color:var(--red)}
+.text-yellow{color:var(--yellow)}
+.text-muted{color:var(--text2)}
+.text-dim{color:var(--text3)}
+.font-bold{font-weight:700}
+.font-600{font-weight:600}
+.rounded{border-radius:7px}
+.w-full{width:100%}
+/* Quiz styles */
+.quiz-container{max-width:760px}
+.question-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px}
+.question-number{font-size:12px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.question-text{font-size:16px;line-height:1.6;color:var(--text);margin-bottom:24px}
+.option-btn{display:flex;align-items:center;gap:14px;width:100%;padding:14px 16px;background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;cursor:pointer;transition:all .15s;text-align:left;margin-bottom:10px}
+.option-btn:hover:not(:disabled){border-color:var(--accent);background:rgba(29,168,160,.08)}
+.option-btn.selected{border-color:var(--accent);background:rgba(29,168,160,.12);color:var(--accent)}
+.option-btn.correct{border-color:var(--green);background:rgba(34,197,94,.12);color:var(--green)}
+.option-btn.wrong{border-color:var(--red);background:rgba(239,68,68,.12);color:var(--red)}
+.option-letter{width:28px;height:28px;border-radius:50%;background:var(--bg2);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.nav-bar{display:flex;align-items:center;gap:12px;margin-top:24px}
+.question-grid{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0}
+.q-dot{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid var(--border)}
+.q-dot.current{border-color:var(--accent);background:rgba(29,168,160,.2);color:var(--accent)}
+.q-dot.answered{background:var(--accent3);color:var(--accent);border-color:var(--accent)}
+.q-dot.flagged{background:rgba(245,158,11,.2);color:var(--yellow);border-color:var(--yellow)}
+.q-dot.wrong-dot{background:rgba(239,68,68,.2);color:var(--red);border-color:var(--red)}
+.q-dot.correct-dot{background:rgba(34,197,94,.2);color:var(--green);border-color:var(--green)}
+/* Timer */
+.timer{font-size:20px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
+.timer.warn{color:var(--yellow)}
+.timer.urgent{color:var(--red)}
+/* Chart */
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:160px;padding:0 8px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bar{width:100%;border-radius:4px 4px 0 0;transition:height .4s;min-height:4px}
+.bar-val{font-size:10px;color:var(--text3)}
+.bar-lbl{font-size:9px;color:var(--text3);text-align:center;word-break:break-word;line-height:1.2}
+/* Flashcard */
+.flashcard{perspective:1000px;cursor:pointer}
+.flashcard-inner{position:relative;width:100%;min-height:200px;transform-style:preserve-3d;transition:transform .4s}
+.flashcard.flipped .flashcard-inner{transform:rotateY(180deg)}
+.flashcard-front,.flashcard-back{position:absolute;width:100%;min-height:200px;backface-visibility:hidden;padding:24px;border-radius:12px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.flashcard-front{background:var(--bg2);border:1.5px solid var(--border)}
+.flashcard-back{background:var(--bg3);border:1.5px solid var(--accent);transform:rotateY(180deg)}
+/* Calendar */
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{padding:6px;border-radius:6px;min-height:52px;border:1px solid var(--border);font-size:11px;cursor:pointer;transition:border-color .15s}
+.cal-day:hover{border-color:var(--border2)}
+.cal-day.today{border-color:var(--accent)}
+.cal-day.has-task{background:rgba(29,168,160,.07)}
+.cal-day-num{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:3px}
+.cal-day.today .cal-day-num{color:var(--accent)}
+.cal-dot{width:5px;height:5px;border-radius:50%;margin:1px 0}
+/* Error log */
+.error-item{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px;border-left:3px solid var(--red)}
+.error-item.pending{border-left-color:var(--red)}
+.error-item.in-progress{border-left-color:var(--yellow)}
+.error-item.mastered{border-left-color:var(--green)}
+/* Mobile */
+@media(max-width:700px){
+  .sidebar{display:none}
+  .grid2,.grid3,.grid4{grid-template-columns:1fr}
+  .page{padding:14px}
+  .bar-lbl{display:none}
+}
+/* Tabs */
+.tabs{display:flex;gap:2px;background:var(--bg3);padding:4px;border-radius:8px;margin-bottom:20px}
+.tab{padding:7px 14px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--text2);transition:all .15s;background:none;border:none}
+.tab.active{background:var(--bg2);color:var(--text);font-weight:600}
+/* Modal overlay */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:16px}
+/* Input group */
+.form-group{margin-bottom:16px}
+.form-label{font-size:12px;color:var(--text2);margin-bottom:6px;display:block;font-weight:600}
+.form-input{width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:14px}
+.form-input:focus{border-color:var(--accent);outline:none}
+/* Range slider */
+input[type=range]{accent-color:var(--accent);width:100%}
+/* Select */
+select{width:100%;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:14px}
+/* Explanation box */
+.explanation{background:var(--bg3);border:1px solid var(--accent3);border-radius:8px;padding:16px;margin-top:16px}
+.explanation-title{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.explanation p{font-size:13px;line-height:1.6;color:var(--text2);margin-bottom:8px}
+.explanation p:last-child{margin-bottom:0}
+/* Mastery */
+.mastery-bar-wrap{margin-bottom:12px}
+.mastery-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--text2)}
+/* Confidence btns */
+.conf-btns{display:flex;gap:8px;margin-top:12px}
+.conf-btn{flex:1;padding:8px;border-radius:6px;font-size:12px;font-weight:600;border:1.5px solid}
+.conf-btn.easy{border-color:var(--green);color:var(--green);background:rgba(34,197,94,.08)}
+.conf-btn.medium{border-color:var(--yellow);color:var(--yellow);background:rgba(245,158,11,.08)}
+.conf-btn.hard{border-color:var(--red);color:var(--red);background:rgba(239,68,68,.08)}
+/* AI Tutor chat */
+.chat-messages{max-height:400px;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:10px}
+.chat-msg{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.6;max-width:90%}
+.chat-msg.user{background:rgba(29,168,160,.15);border:1px solid rgba(29,168,160,.3);align-self:flex-end;color:var(--text)}
+.chat-msg.ai{background:var(--bg3);border:1px solid var(--border);align-self:flex-start;color:var(--text)}
+.chat-input-area{display:flex;gap:8px;margin-top:12px}
+.chat-input{flex:1;padding:10px 14px;background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;resize:none}
+.chat-input:focus{border-color:var(--accent);outline:none}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useCallback, useRef, useMemo } = React;
+
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const EXAM_INFO = {
+  excoba: {
+    name: "EXCOBA",
+    full: "Examen de Competencias Básicas",
+    weight: 25,
+    total: 180,
+    source: "Instructivo oficial Métrica Educativa / UGTO 2022 (vigente)",
+    structure: [
+      { section: "Primaria – Español", count: 20 },
+      { section: "Primaria – Matemáticas", count: 20 },
+      { section: "Secundaria – Español", count: 20 },
+      { section: "Secundaria – Matemáticas", count: 20 },
+      { section: "Secundaria – Ciencias Naturales", count: 20 },
+      { section: "Secundaria – Ciencias Sociales", count: 20 },
+      { section: "Bachillerato – Física", count: 20 },
+      { section: "Bachillerato – Biología", count: 20 },
+      { section: "Bachillerato – Química", count: 20 },
+    ],
+    note: "Para Médico Cirujano las asignaturas de bachillerato son: Física, Biología y Química."
+  },
+  divisional: {
+    name: "Examen Divisional",
+    full: "Examen de Conocimientos Divisional – DCS León",
+    weight: 50,
+    total: null,
+    source: "Temario oficial EJ-27 DCS León (PDF no legible por OCR; datos derivados del temario descargado)",
+    note: "El número exacto de reactivos no se publicó en el documento disponible. Se muestra como 'por confirmar'."
+  },
+  psico: {
+    name: "Psicométrico",
+    full: "Examen Psicométrico",
+    weight: 15,
+    note: "Evaluado externamente. Costo adicional: $680.00."
+  }
+};
+
+const SUBJECTS = {
+  // EXCOBA subjects
+  "Español (Primaria)": { area: "EXCOBA", color: "#3b82f6", topics: ["Recuento histórico","Reportaje","Textos científicos","Cuestionarios","Ortografía","Sintaxis","Léxico","Cuento","Textos instructivos"] },
+  "Matemáticas (Primaria)": { area: "EXCOBA", color: "#8b5cf6", topics: ["Números naturales","Fracciones","Decimales","Figuras planas","Cuerpos geométricos","Magnitudes","Proporcionalidad","Probabilidad","Estadística"] },
+  "Español (Secundaria)": { area: "EXCOBA", color: "#3b82f6", topics: ["Medios de comunicación","Textos informativos","Entrevista","Textos descriptivos","Textos literarios","Documentos legales"] },
+  "Matemáticas (Secundaria)": { area: "EXCOBA", color: "#8b5cf6", topics: ["Números reales","Álgebra básica","Sucesiones","Polinomios","Ecuaciones lineales","Ecuaciones cuadráticas","Funciones lineales","Funciones cuadráticas","Geometría","Trigonometría","Estadística"] },
+  "Ciencias Naturales (Secundaria)": { area: "EXCOBA", color: "#22c55e", topics: ["Biodiversidad","Nutrición","Respiración","Reproducción y genética","El movimiento","Fuerzas","Interacciones de la materia","Características de materiales","Reacciones químicas"] },
+  "Ciencias Sociales (Secundaria)": { area: "EXCOBA", color: "#f59e0b", topics: ["Geografía – espacio y mapas","Recursos naturales","Demografía","Historia s.XVI-XX","Revolución mexicana","Civismo y democracia"] },
+  "Física (Bachillerato)": { area: "EXCOBA", color: "#ef4444", topics: ["Lenguaje técnico","Tipos de movimiento","Leyes de Newton","Trabajo y energía","Fluidos","Calor y temperatura","Electricidad","Magnetismo"] },
+  "Biología (Bachillerato)": { area: "EXCOBA", color: "#22c55e", topics: ["Biología como ciencia","Biomoléculas","Célula","Metabolismo","Biodiversidad","Reproducción celular","Herencia – Leyes de Mendel","Variaciones genéticas","Biotecnología","Evolución","Sistemas del cuerpo humano","Plantas","Ecología"] },
+  "Química (Bachillerato)": { area: "EXCOBA", color: "#1da8a0", topics: ["Materia y energía","Modelo atómico","Tabla periódica","Enlace químico","Nomenclatura inorgánica","Reacciones químicas","Termoquímica","Estequiometría","Contaminación","Disoluciones y mezclas","Compuestos orgánicos"] },
+  // Divisional
+  "Conocimientos Divisionales": { area: "DIVISIONAL", color: "#f59e0b", topics: ["Biología molecular","Fisiología humana","Anatomía","Bioquímica básica","Histología","Salud pública","Epidemiología básica","Ética médica"] },
+};
+
+const QUESTION_BANK = [
+  // EXCOBA – Biología (Bachillerato)
+  { id:"B01", subj:"Biología (Bachillerato)", topic:"Biomoléculas", diff:2, text:"¿Cuál de las siguientes moléculas actúa como monómero en la síntesis de proteínas?", opts:["A) Nucleótido","B) Aminoácido","C) Monosacárido","D) Ácido graso"], ans:1, exp:"Las proteínas son polímeros formados por aminoácidos unidos mediante enlaces peptídicos. Los nucleótidos forman ácidos nucleicos, los monosacáridos forman polisacáridos y los ácidos grasos forman lípidos.", type:"original" },
+  { id:"B02", subj:"Biología (Bachillerato)", topic:"Reproducción celular", diff:2, text:"La mitosis produce células hijas con la misma cantidad de cromosomas que la célula madre. ¿Qué proceso reduce a la mitad el número cromosómico?", opts:["A) Mitosis II","B) Fecundación","C) Meiosis","D) Replicación del ADN"], ans:2, exp:"La meiosis es el proceso de división celular que reduce el número cromosómico a la mitad (de 2n a n), produciendo gametos (óvulos y espermatozoides). La fecundación, al contrario, une dos gametos y restaura el número diploide.", type:"original" },
+  { id:"B03", subj:"Biología (Bachillerato)", topic:"Herencia – Leyes de Mendel", diff:2, text:"En un cruce monohíbrido Aa × Aa, ¿qué proporción fenotípica se espera si A es dominante sobre a?", opts:["A) 1:1","B) 3:1","C) 1:2:1","D) 2:1"], ans:1, exp:"El cuadro de Punnett muestra genotipos: AA (25%), Aa (50%), aa (25%). Como A es dominante, AA y Aa expresan el fenotipo dominante (75%) y aa el recesivo (25%), dando proporción fenotípica 3:1.", type:"original" },
+  { id:"B04", subj:"Biología (Bachillerato)", topic:"Sistemas del cuerpo humano", diff:1, text:"¿Qué estructura del corazón impide el regreso de sangre del ventrículo izquierdo hacia la aurícula izquierda?", opts:["A) Válvula pulmonar","B) Válvula aórtica","C) Válvula mitral","D) Válvula tricúspide"], ans:2, exp:"La válvula mitral (bicúspide) se ubica entre la aurícula izquierda y el ventrículo izquierdo. Se cierra durante la sístole ventricular para evitar el reflujo de sangre hacia la aurícula izquierda.", type:"original" },
+  { id:"B05", subj:"Biología (Bachillerato)", topic:"Metabolismo", diff:3, text:"En la glucólisis, ¿cuántas moléculas netas de ATP se producen a partir de una molécula de glucosa?", opts:["A) 1","B) 2","C) 4","D) 36"], ans:1, exp:"La glucólisis produce 4 ATP brutos, pero consume 2 ATP en las etapas preparatorias (hexoquinasa y fosfofructoquinasa), por lo que la ganancia neta es de 2 ATP. Los 36–38 ATP se obtienen en la respiración aeróbica completa.", type:"original" },
+  { id:"B06", subj:"Biología (Bachillerato)", topic:"Evolución", diff:2, text:"¿Cuál es el mecanismo central de la teoría de la evolución de Darwin y Wallace?", opts:["A) Herencia de caracteres adquiridos","B) Mutaciones aleatorias en el laboratorio","C) Selección natural","D) Equilibrio de Hardy-Weinberg"], ans:2, exp:"La selección natural es el mecanismo propuesto por Darwin y Wallace: los individuos con variaciones ventajosas para su entorno sobreviven y se reproducen más, transmitiendo esas características a su descendencia.", type:"original" },
+
+  // EXCOBA – Química (Bachillerato)
+  { id:"Q01", subj:"Química (Bachillerato)", topic:"Tabla periódica", diff:1, text:"¿Qué propiedad periódica AUMENTA de izquierda a derecha en un periodo y DISMINUYE de arriba a abajo en un grupo?", opts:["A) Radio atómico","B) Electronegatividad","C) Carácter metálico","D) Masa atómica"], ans:1, exp:"La electronegatividad mide la tendencia de un átomo a atraer electrones en un enlace. Aumenta al avanzar en un periodo (mayor carga nuclear, mismo nivel de energía) y disminuye al bajar en un grupo (mayor distancia núcleo-electrones de enlace).", type:"original" },
+  { id:"Q02", subj:"Química (Bachillerato)", topic:"Reacciones químicas", diff:2, text:"Al balancear la ecuación: _H₂ + _O₂ → _H₂O, los coeficientes correctos son:", opts:["A) 1, 1, 1","B) 2, 1, 2","C) 1, 2, 2","D) 2, 2, 2"], ans:1, exp:"Balanceo: 2H₂ + O₂ → 2H₂O. Verificación: Reactivos: 4H, 2O. Productos: 4H, 2O. ✓ Los coeficientes son 2, 1, 2.", type:"original" },
+  { id:"Q03", subj:"Química (Bachillerato)", topic:"Disoluciones y mezclas", diff:2, text:"Una solución con pH = 3 tiene una concentración de iones H⁺ de:", opts:["A) 3 mol/L","B) 0.003 mol/L","C) 0.001 mol/L","D) 1×10⁻³ mol/L"], ans:3, exp:"pH = -log[H⁺], por lo tanto [H⁺] = 10^(-pH). Si pH = 3, entonces [H⁺] = 10⁻³ mol/L = 0.001 mol/L. Las opciones C y D son equivalentes, pero D usa notación científica más precisa.", type:"original" },
+  { id:"Q04", subj:"Química (Bachillerato)", topic:"Enlace químico", diff:2, text:"El NaCl se forma por un enlace:", opts:["A) Covalente polar","B) Covalente apolar","C) Iónico","D) Metálico"], ans:2, exp:"El NaCl se forma por transferencia de un electrón del Na (metal alcalino) al Cl (halógeno), creando iones Na⁺ y Cl⁻ que se atraen electrostáticamente. Eso es un enlace iónico, característico entre metales y no metales con gran diferencia de electronegatividad.", type:"original" },
+  { id:"Q05", subj:"Química (Bachillerato)", topic:"Estequiometría", diff:3, text:"Si 4 g de H₂ reaccionan completamente con O₂, ¿cuántos gramos de H₂O se producen? (H=1, O=16)", opts:["A) 18 g","B) 36 g","C) 32 g","D) 20 g"], ans:1, exp:"Mol de H₂ = 4g ÷ 2g/mol = 2 mol. Reacción: 2H₂ + O₂ → 2H₂O. Relación 1:1, entonces 2 mol H₂ producen 2 mol H₂O. Masa H₂O = 2 mol × 18 g/mol = 36 g.", type:"original" },
+
+  // EXCOBA – Física (Bachillerato)
+  { id:"F01", subj:"Física (Bachillerato)", topic:"Leyes de Newton", diff:2, text:"Una caja de 10 kg reposa sobre una superficie horizontal sin fricción. Si se aplica una fuerza neta de 50 N, ¿cuál es su aceleración?", opts:["A) 0.2 m/s²","B) 5 m/s²","C) 50 m/s²","D) 500 m/s²"], ans:1, exp:"Segunda ley de Newton: F = m·a → a = F/m = 50 N / 10 kg = 5 m/s². La fuerza neta es directamente proporcional a la aceleración e inversamente proporcional a la masa.", type:"original" },
+  { id:"F02", subj:"Física (Bachillerato)", topic:"Trabajo y energía", diff:2, text:"Un objeto de 2 kg cae desde una altura de 5 m. ¿Cuál es su energía cinética justo antes de tocar el suelo? (g = 10 m/s²)", opts:["A) 10 J","B) 50 J","C) 100 J","D) 25 J"], ans:2, exp:"Energía potencial inicial Ep = mgh = 2×10×5 = 100 J. Por conservación de la energía mecánica (sin fricción), toda la Ep se convierte en Ec. Ec = 100 J.", type:"original" },
+  { id:"F03", subj:"Física (Bachillerato)", topic:"Tipos de movimiento", diff:1, text:"¿Cuál de las siguientes gráficas representa un movimiento rectilíneo uniforme (MRU)?", opts:["A) Posición vs tiempo: parábola","B) Velocidad vs tiempo: línea diagonal","C) Posición vs tiempo: línea recta con pendiente constante","D) Aceleración vs tiempo: línea diagonal"], ans:2, exp:"En el MRU la velocidad es constante y no hay aceleración. Por eso: a) Posición vs tiempo = línea recta (pendiente = velocidad constante), b) Velocidad vs tiempo = línea horizontal.", type:"original" },
+
+  // EXCOBA – Matemáticas (Secundaria)
+  { id:"M01", subj:"Matemáticas (Secundaria)", topic:"Ecuaciones cuadráticas", diff:2, text:"¿Cuáles son las soluciones de x² - 5x + 6 = 0?", opts:["A) x = 2 y x = 3","B) x = -2 y x = -3","C) x = 1 y x = 6","D) x = 5 y x = 1"], ans:0, exp:"Factorizando: (x-2)(x-3)=0. Entonces x=2 o x=3. Verificación: (2)²-5(2)+6 = 4-10+6 = 0 ✓. (3)²-5(3)+6 = 9-15+6 = 0 ✓.", type:"original" },
+  { id:"M02", subj:"Matemáticas (Secundaria)", topic:"Trigonometría", diff:2, text:"En un triángulo rectángulo, el cateto opuesto mide 3 y la hipotenusa mide 5. ¿Cuánto vale el seno del ángulo opuesto a ese cateto?", opts:["A) 5/3","B) 4/5","C) 3/5","D) 3/4"], ans:2, exp:"sen(θ) = cateto opuesto / hipotenusa = 3/5. El cateto adyacente se calcula con Pitágoras: √(5²-3²) = √16 = 4. Así: cos(θ)=4/5 y tan(θ)=3/4.", type:"original" },
+  { id:"M03", subj:"Matemáticas (Secundaria)", topic:"Estadística", diff:1, text:"Los datos {4, 7, 2, 9, 8} tienen una media de:", opts:["A) 5","B) 6","C) 7","D) 8"], ans:1, exp:"Media = suma / cantidad = (4+7+2+9+8)/5 = 30/5 = 6.", type:"original" },
+  { id:"M04", subj:"Matemáticas (Secundaria)", topic:"Álgebra básica", diff:2, text:"Si 2x + 3 = 11, ¿cuánto vale x?", opts:["A) 3","B) 4","C) 5","D) 7"], ans:1, exp:"2x = 11-3 = 8. x = 8/2 = 4. Comprobación: 2(4)+3 = 11 ✓.", type:"original" },
+  { id:"M05", subj:"Matemáticas (Secundaria)", topic:"Proporcionalidad", diff:2, text:"Si 5 obreros tardan 12 días en construir una barda, ¿cuántos días tardarían 10 obreros?", opts:["A) 24 días","B) 6 días","C) 12 días","D) 8 días"], ans:1, exp:"Proporcionalidad inversa: más obreros → menos días. 5×12 = 10×d. d = 60/10 = 6 días.", type:"original" },
+
+  // EXCOBA – Español (Secundaria)
+  { id:"E01", subj:"Español (Secundaria)", topic:"Textos informativos", diff:1, text:"En un texto expositivo, ¿cuál es el propósito principal del párrafo introductorio?", opts:["A) Presentar el punto de vista del autor","B) Establecer el tema y orientar al lector","C) Dar una conclusión definitiva","D) Describir los resultados de la investigación"], ans:1, exp:"El párrafo introductorio tiene la función de presentar el tema, contextualizarlo y orientar al lector sobre lo que encontrará en el texto. No se busca dar una opinión personal ni concluir.", type:"original" },
+  { id:"E02", subj:"Español (Secundaria)", topic:"Textos literarios", diff:2, text:"Una metáfora es una figura retórica que:", opts:["A) Compara dos elementos usando 'como' o 'cual'","B) Identifica dos elementos sin usar términos comparativos","C) Repite palabras para dar énfasis","D) Describe el sonido de algo"], ans:1, exp:"La metáfora identifica directamente un elemento con otro: 'Sus ojos son luceros' (no usa 'como'). El símil sí usa términos comparativos ('Sus ojos son como luceros'). La anáfora es repetición; la onomatopeya describe sonidos.", type:"original" },
+
+  // Ciencias Naturales
+  { id:"CN01", subj:"Ciencias Naturales (Secundaria)", topic:"Biodiversidad", diff:1, text:"¿Cuál de los siguientes es un mecanismo de selección natural?", opts:["A) Mutación dirigida por el ambiente","B) Reproducción diferencial de individuos mejor adaptados","C) Herencia de rasgos adquiridos durante la vida","D) Uso y desuso de órganos"], ans:1, exp:"La selección natural implica que los individuos con variaciones favorables sobreviven y se reproducen más. Las opciones A, C y D corresponden a ideas lamarckistas, no a la selección natural darwiniana.", type:"original" },
+  { id:"CN02", subj:"Ciencias Naturales (Secundaria)", topic:"Reproducción y genética", diff:2, text:"¿Cuántos cromosomas contiene una célula humana somática (no gameto)?", opts:["A) 23","B) 46","C) 48","D) 92"], ans:1, exp:"Las células somáticas humanas son diploides (2n=46): 44 autosomas más 2 cromosomas sexuales. Los gametos (óvulo y espermatozoide) son haploides: 23 cromosomas (n=23).", type:"original" },
+
+  // Conocimientos Divisionales (estimados)
+  { id:"D01", subj:"Conocimientos Divisionales", topic:"Biología molecular", diff:3, text:"¿Cuál es la función del ARN mensajero (ARNm) en la síntesis proteica?", opts:["A) Unir los aminoácidos directamente","B) Transportar el código genético del núcleo al ribosoma","C) Catalizar reacciones de transcripción","D) Replicar el ADN"], ans:1, exp:"El ARNm lleva la información genética del ADN (en el núcleo) al ribosoma (en el citoplasma), donde es 'leída' para sintetizar proteínas. El ARN de transferencia (ARNt) transporta los aminoácidos, y los ribosomas catalizan la unión.", type:"original", estimated: true },
+  { id:"D02", subj:"Conocimientos Divisionales", topic:"Fisiología humana", diff:3, text:"La presión sistólica en un adulto sano en reposo es aproximadamente:", opts:["A) 60-70 mmHg","B) 80-90 mmHg","C) 100-120 mmHg","D) 140-160 mmHg"], ans:2, exp:"La presión arterial normal se expresa como sistólica/diastólica. El rango normal es 90-120 mmHg sistólica y 60-80 mmHg diastólica. Valores ≥130/80 se consideran hipertensión según guías actuales.", type:"original", estimated: true },
+];
+
+const FLASHCARDS_DEFAULT = [
+  { id:"FC01", subj:"Biología (Bachillerato)", front:"¿Qué es la mitosis?", back:"División celular que produce dos células hijas genéticamente idénticas a la célula madre (mismo número de cromosomas, 2n→2n). Fases: profase, metafase, anafase, telofase.", mastery:0, history:[] },
+  { id:"FC02", subj:"Química (Bachillerato)", front:"Define electronegatividad", back:"Tendencia de un átomo a atraer electrones de un enlace hacia sí mismo. Aumenta en un periodo (→) y disminuye en un grupo (↓). El elemento más electronegativo es el Flúor (F).", mastery:0, history:[] },
+  { id:"FC03", subj:"Física (Bachillerato)", front:"Enuncia la Segunda Ley de Newton", back:"La fuerza neta aplicada sobre un objeto es igual al producto de su masa por su aceleración: F = m·a. Si la fuerza neta es cero, el objeto mantiene su estado de movimiento (Primera Ley).", mastery:0, history:[] },
+  { id:"FC04", subj:"Matemáticas (Secundaria)", front:"Fórmula general para ecuación cuadrática ax²+bx+c=0", back:"x = (-b ± √(b²-4ac)) / 2a. El discriminante Δ=b²-4ac: si Δ>0 hay 2 raíces reales; si Δ=0 hay 1 raíz doble; si Δ<0 no hay raíces reales.", mastery:0, history:[] },
+  { id:"FC05", subj:"Biología (Bachillerato)", front:"¿Qué son las Leyes de Mendel?", back:"1ª Ley (Segregación): los alelos se separan durante la formación de gametos. 2ª Ley (Distribución independiente): los alelos de distintos genes se distribuyen independientemente.", mastery:0, history:[] },
+];
+
+// ─── STORAGE ──────────────────────────────────────────────────────────────────
+function loadData(key, def) {
+  try { const v = localStorage.getItem('medadmit_'+key); return v ? JSON.parse(v) : def; }
+  catch { return def; }
+}
+function saveData(key, val) {
+  try { localStorage.setItem('medadmit_'+key, JSON.stringify(val)); } catch {}
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function pct(n, t) { return t === 0 ? 0 : Math.round((n/t)*100); }
+function shuffle(arr) { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a; }
+function now() { return new Date().toLocaleDateString('es-MX'); }
+function formatTime(s) {
+  const m=Math.floor(s/60), sec=s%60;
+  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+// ─── ROOT ────────────────────────────────────────────────────────────────────
+function App() {
+  const [page, setPage] = useState('home');
+  const [results, setResults] = useState(() => loadData('results', []));
+  const [errors, setErrors] = useState(() => loadData('errors', []));
+  const [flashcards, setFlashcards] = useState(() => loadData('flashcards', FLASHCARDS_DEFAULT));
+  const [config, setConfig] = useState(() => loadData('config', { examDate: '2027-01-15', hoursPerDay: 2 }));
+  const [errorBadge, setErrorBadge] = useState(0);
+
+  useEffect(() => { saveData('results', results); }, [results]);
+  useEffect(() => { saveData('errors', errors); }, [errors]);
+  useEffect(() => { saveData('flashcards', flashcards); }, [flashcards]);
+  useEffect(() => { saveData('config', config); }, [config]);
+  useEffect(() => { setErrorBadge(errors.filter(e=>e.status!=='mastered').length); }, [errors]);
+
+  function addResult(r) { setResults(prev => [r, ...prev].slice(0,50)); }
+  function addErrors(newErrs) {
+    setErrors(prev => {
+      const updated = [...prev];
+      newErrs.forEach(e => {
+        const idx = updated.findIndex(x => x.qid === e.qid);
+        if (idx >= 0) {
+          updated[idx] = { ...updated[idx], attempts: (updated[idx].attempts||0)+1, status:'pending', lastDate:now() };
+        } else {
+          updated.push({ ...e, attempts:1, status:'pending', addedDate:now(), lastDate:now() });
+        }
+      });
+      return updated;
+    });
+  }
+  function markErrorFixed(qid) {
+    setErrors(prev => prev.map(e => e.qid===qid ? {...e, status:'corrected', lastDate:now()} : e));
+  }
+
+  const navItems = [
+    { id:'home', icon:'🏠', label:'Inicio' },
+    { id:'info', icon:'📋', label:'Info del Examen' },
+    { id:'simulacro', icon:'📝', label:'Simulacro' },
+    { id:'practice', icon:'🎯', label:'Práctica por Materia' },
+    { id:'errors', icon:'🔴', label:'Mis Errores', badge: errorBadge },
+    { id:'flashcards', icon:'🃏', label:'Flashcards' },
+    { id:'stats', icon:'📊', label:'Estadísticas' },
+    { id:'tutor', icon:'🤖', label:'Tutor IA' },
+    { id:'calendar', icon:'📅', label:'Calendario' },
+    { id:'settings', icon:'⚙️', label:'Ajustes' },
+  ];
+
+  const pages = { home: <HomePage results={results} errors={errors} config={config} setPage={setPage} />,
+    info: <InfoPage />,
+    simulacro: <SimulacroPage addResult={addResult} addErrors={addErrors} />,
+    practice: <PracticePage addResult={addResult} addErrors={addErrors} markErrorFixed={markErrorFixed} />,
+    errors: <ErrorsPage errors={errors} setErrors={setErrors} addResult={addResult} addErrors={addErrors} markErrorFixed={markErrorFixed} />,
+    flashcards: <FlashcardsPage flashcards={flashcards} setFlashcards={setFlashcards} />,
+    stats: <StatsPage results={results} errors={errors} />,
+    tutor: <TutorPage />,
+    calendar: <CalendarPage config={config} setConfig={setConfig} />,
+    settings: <SettingsPage config={config} setConfig={setConfig} results={results} errors={errors} flashcards={flashcards} setResults={setResults} setErrors={setErrors} setFlashcards={setFlashcards} />,
+  };
+
+  return (
+    <div className="app">
+      <nav className="sidebar">
+        <div className="sidebar-logo">
+          <div className="logo-main">MED-ADMIT UG</div>
+          <div className="logo-sub">Médico Cirujano · Campus León · EJ-27</div>
+        </div>
+        <div className="sidebar-nav">
+          {navItems.map(n => (
+            <div key={n.id} className={`nav-item ${page===n.id?'active':''}`} onClick={()=>setPage(n.id)}>
+              <span className="nav-icon">{n.icon}</span>
+              <span className="nav-label">{n.label}</span>
+              {n.badge > 0 && <span className="nav-badge">{n.badge}</span>}
+            </div>
+          ))}
+        </div>
+      </nav>
+      <main className="main">
+        {/* Mobile tab bar */}
+        <div style={{display:'flex',gap:4,padding:'8px 10px',background:'var(--bg2)',borderBottom:'1px solid var(--border)',overflowX:'auto',flexShrink:0}} className="mobile-only">
+          {navItems.slice(0,6).map(n=>(
+            <button key={n.id} onClick={()=>setPage(n.id)} style={{padding:'6px 10px',borderRadius:6,background:page===n.id?'var(--accent)':'var(--bg3)',color:page===n.id?'#fff':'var(--text2)',fontSize:11,whiteSpace:'nowrap',flexShrink:0,position:'relative'}}>
+              {n.icon} {n.label}
+              {n.badge>0 && <span style={{position:'absolute',top:-4,right:-4,background:'var(--red)',color:'#fff',borderRadius:'50%',width:14,height:14,fontSize:9,display:'flex',alignItems:'center',justifyContent:'center'}}>{n.badge}</span>}
+            </button>
+          ))}
+        </div>
+        <div className="page">
+          {pages[page] || pages.home}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+// ─── HOME ────────────────────────────────────────────────────────────────────
+function HomePage({ results, errors, config, setPage }) {
+  const totalQ = results.reduce((s,r)=>s+r.total,0);
+  const totalRight = results.reduce((s,r)=>s+r.correct,0);
+  const pending = errors.filter(e=>e.status!=='mastered').length;
+  const avgScore = totalQ ? Math.round((totalRight/totalQ)*100) : null;
+  const examDate = new Date(config.examDate+'T12:00:00');
+  const daysLeft = Math.max(0, Math.ceil((examDate - new Date())/(1000*60*60*24)));
+  const lastSim = results.find(r=>r.mode==='simulacro');
+
+  const subjScores = {};
+  results.forEach(r => {
+    if(r.bySubj) Object.entries(r.bySubj).forEach(([s,d])=>{
+      if(!subjScores[s]) subjScores[s]={c:0,t:0};
+      subjScores[s].c += d.c; subjScores[s].t += d.t;
+    });
+  });
+  const weakSubjs = Object.entries(subjScores).filter(([,d])=>d.t>=5).sort((a,b)=>pct(a[1].c,a[1].t)-pct(b[1].c,b[1].t)).slice(0,3);
+
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">Mi Preparación para Medicina</div>
+        <div className="page-sub">Universidad de Guanajuato · Campus León · Proceso Enero–Junio 2027</div>
+      </div>
+
+      <div className="alert alert-warn mb-4">
+        ⏳ <strong>Faltan {daysLeft} días</strong> para el examen. Fecha objetivo: {examDate.toLocaleDateString('es-MX',{day:'numeric',month:'long',year:'numeric'})}
+      </div>
+
+      <div className="grid4 mb-4">
+        <div className="stat-card teal">
+          <div className="stat-val">{avgScore !== null ? avgScore+'%' : '—'}</div>
+          <div className="stat-lbl">Promedio global</div>
+          <div className="stat-sub">{totalQ} reactivos contestados</div>
+        </div>
+        <div className="stat-card red">
+          <div className="stat-val">{pending}</div>
+          <div className="stat-lbl">Errores pendientes</div>
+          <div className="stat-sub">Requieren revancha</div>
+        </div>
+        <div className="stat-card blue">
+          <div className="stat-val">{results.length}</div>
+          <div className="stat-lbl">Simulacros/prácticas</div>
+          <div className="stat-sub">Exámenes completados</div>
+        </div>
+        <div className="stat-card yellow">
+          <div className="stat-val">{daysLeft}</div>
+          <div className="stat-lbl">Días restantes</div>
+          <div className="stat-sub">Hasta el examen</div>
+        </div>
+      </div>
+
+      <div className="grid2 mb-4">
+        <div className="card">
+          <div className="section-title">Accesos rápidos</div>
+          <div className="flex flex-col gap-2">
+            <button className="btn btn-primary w-full btn-lg" onClick={()=>setPage('simulacro')}>🚀 Iniciar Simulacro EXCOBA</button>
+            <button className="btn btn-secondary w-full" onClick={()=>setPage('practice')}>📚 Práctica por materia</button>
+            <button className="btn btn-secondary w-full" onClick={()=>setPage('errors')}>🔴 Revancha de errores ({pending})</button>
+            <button className="btn btn-secondary w-full" onClick={()=>setPage('tutor')}>🤖 Consultar al Tutor IA</button>
+          </div>
+        </div>
+        <div className="card">
+          <div className="section-title">Criterios de selección (oficiales)</div>
+          {[{l:'Examen Divisional',v:50,c:'var(--accent)'},{l:'EXCOBA',v:25,c:'var(--blue)'},{l:'Psicométrico',v:15,c:'var(--purple)'},{l:'Promedio NMS',v:5,c:'var(--green)'},{l:'Exámenes extraordinarios',v:5,c:'var(--yellow)'}].map(c=>(
+            <div key={c.l} className="mastery-bar-wrap">
+              <div className="mastery-label"><span>{c.l}</span><span style={{color:c.c,fontWeight:700}}>{c.v}%</span></div>
+              <div className="progress-bar"><div className="progress-fill" style={{width:c.v+'%',background:c.c}}></div></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {weakSubjs.length > 0 && (
+        <div className="card mb-4">
+          <div className="section-title">⚠️ Áreas que necesitan atención</div>
+          <div className="grid3">
+            {weakSubjs.map(([s,d])=>(
+              <div key={s} style={{background:'var(--bg3)',borderRadius:8,padding:12,borderLeft:'3px solid var(--red)'}}>
+                <div style={{fontSize:12,fontWeight:700,marginBottom:4}}>{s}</div>
+                <div style={{fontSize:24,fontWeight:700,color:'var(--red)'}}>{pct(d.c,d.t)}%</div>
+                <div style={{fontSize:11,color:'var(--text3)'}}>{d.c}/{d.t} correctas</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {totalQ === 0 && (
+        <div className="card" style={{textAlign:'center',padding:40}}>
+          <div style={{fontSize:48,marginBottom:12}}>📖</div>
+          <div style={{fontSize:16,fontWeight:700,marginBottom:8}}>Empieza tu primera sesión</div>
+          <div style={{fontSize:13,color:'var(--text2)',marginBottom:20}}>Completa un simulacro o práctica para ver tus estadísticas aquí.</div>
+          <button className="btn btn-primary btn-lg" onClick={()=>setPage('simulacro')}>Comenzar ahora →</button>
+        </div>
+      )}
+
+      <div className="card mt-4">
+        <div className="section-title">ℹ️ Datos verificados del examen</div>
+        <div className="grid2">
+          <div>
+            <div style={{fontSize:12,color:'var(--text3)',marginBottom:8}}>Evaluaciones requeridas</div>
+            {[EXAM_INFO.excoba, EXAM_INFO.divisional, EXAM_INFO.psico].map(e=>(
+              <div key={e.name} className="flex items-center gap-2 mb-2">
+                <div style={{width:8,height:8,borderRadius:'50%',background:'var(--accent)',flexShrink:0}}></div>
+                <span style={{fontSize:13}}>{e.name}</span>
+                <span style={{marginLeft:'auto',fontSize:12,color:'var(--accent)',fontWeight:700}}>{e.weight}%</span>
+              </div>
+            ))}
+          </div>
+          <div style={{fontSize:12,color:'var(--text3)',lineHeight:1.7}}>
+            <div>📅 Registro de ficha: 24 ago – 20 oct 2026</div>
+            <div>💰 Costo ficha: $1,645.00</div>
+            <div>💰 Costo psicométrico: $680.00</div>
+            <div>📍 Campus León – División DCS</div>
+            <div>📞 477-267-4900 ext. 3669</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── INFO PAGE ────────────────────────────────────────────────────────────────
+function InfoPage() {
+  const [tab, setTab] = useState('excoba');
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">📋 Información Oficial del Examen</div>
+        <div className="page-sub">Datos verificados · Médico Cirujano · Campus León · EJ-27</div>
+      </div>
+      <div className="alert alert-info mb-4">ℹ️ Información obtenida directamente del portal oficial ugto.mx/admisionug y del instructivo oficial del EXCOBA (Métrica Educativa). El temario divisional en PDF no fue legible por OCR; los temas divisionales son una estimación basada en el programa de estudio de Médico Cirujano.</div>
+      <div className="tabs">
+        {['excoba','divisional','criterios','estructura'].map(t=>(
+          <button key={t} className={`tab ${tab===t?'active':''}`} onClick={()=>setTab(t)}>
+            {{excoba:'EXCOBA',divisional:'Examen Divisional',criterios:'Criterios',estructura:'Estructura EXCOBA'}[t]}
+          </button>
+        ))}
+      </div>
+
+      {tab==='excoba' && (
+        <div>
+          <div className="card mb-4">
+            <div className="flex justify-between items-center mb-3">
+              <div style={{fontSize:16,fontWeight:700}}>Examen de Competencias Básicas (EXCOBA)</div>
+              <span className="tag tag-teal">25% de selección</span>
+            </div>
+            <div className="grid2 mb-4">
+              <div style={{fontSize:13,color:'var(--text2)',lineHeight:2}}>
+                <div>📊 <strong>Total de reactivos:</strong> 180</div>
+                <div>🎯 <strong>Tipo de respuesta:</strong> Semiconstruida</div>
+                <div>📐 <strong>Modalidades:</strong> Arrastre, selección, escritura numérica</div>
+                <div>✏️ <strong>Calificación:</strong> Sin penalización por error</div>
+                <div>🏢 <strong>Administrado por:</strong> Métrica Educativa, A.C.</div>
+              </div>
+              <div style={{fontSize:13,color:'var(--text2)',lineHeight:2}}>
+                <div>🖥️ <strong>Modalidad:</strong> Computarizada</div>
+                <div>🔖 <strong>Preguntas marcables:</strong> Sí (botón derecho)</div>
+                <div>🧮 <strong>Calculadora:</strong> Integrada en el sistema</div>
+                <div>📋 <strong>Formulario:</strong> Integrado en el sistema</div>
+                <div>📅 <strong>Proceso:</strong> Enero–Junio 2027</div>
+              </div>
+            </div>
+            <div className="alert alert-info">Para Médico Cirujano, las asignaturas de bachillerato son: <strong>Física, Biología y Química</strong> (20 reactivos cada una).</div>
+          </div>
+        </div>
+      )}
+
+      {tab==='divisional' && (
+        <div>
+          <div className="card mb-4">
+            <div className="flex justify-between items-center mb-3">
+              <div style={{fontSize:16,fontWeight:700}}>Examen de Conocimientos Divisional</div>
+              <span className="tag tag-yellow">50% de selección · Peso MÁXIMO</span>
+            </div>
+            <div className="alert alert-warn mb-3">⚠️ <strong>Dato no verificado:</strong> El número exacto de reactivos del examen divisional no fue legible en el PDF oficial. Los temas abajo son una estimación basada en el plan de estudios de Médico Cirujano UG. Descarga el temario PDF oficial para confirmar.</div>
+            <div style={{fontSize:13,color:'var(--text2)',lineHeight:2,marginBottom:16}}>
+              <div>📊 <strong>Peso:</strong> 50% de los criterios de selección (el más importante)</div>
+              <div>🔗 <strong>Fuente:</strong> <a href="https://www.ugto.mx/admisionug/images/dcsleon/2026/Temario_Admisión_EJ_27_DCS_Licenciatura.pdf" target="_blank" style={{color:'var(--accent)'}}>Temario oficial PDF ↗</a></div>
+            </div>
+            <div className="section-title">Áreas temáticas estimadas (confirmar con temario oficial)</div>
+            <div className="grid2">
+              {['Biología molecular y celular','Bioquímica básica','Anatomía humana','Fisiología humana','Histología','Salud pública','Epidemiología básica','Ética médica y bioética'].map(t=>(
+                <div key={t} className="flex items-center gap-2" style={{padding:'6px 0',borderBottom:'1px solid var(--border)'}}>
+                  <span style={{color:'var(--yellow)'}}>⚠️</span>
+                  <span style={{fontSize:13}}>{t}</span>
+                  <span className="tag tag-yellow" style={{marginLeft:'auto',fontSize:9}}>estimado</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tab==='criterios' && (
+        <div className="card">
+          <div style={{fontSize:16,fontWeight:700,marginBottom:16}}>Criterios de Selección Oficiales</div>
+          {[
+            {n:'Examen de conocimientos divisional',v:50,c:'var(--accent)',note:'El de mayor peso. Específico para Médico Cirujano.'},
+            {n:'Examen de competencias básicas (EXCOBA)',v:25,c:'var(--blue)',note:'180 reactivos. Administrado por Métrica Educativa.'},
+            {n:'Examen Psicométrico',v:15,c:'var(--purple)',note:'Costo adicional: $680.00. Presentación presencial.'},
+            {n:'Promedio de nivel medio superior (NMS)',v:5,c:'var(--green)',note:'Promedio del bachillerato. Requiere certificado o constancia.'},
+            {n:'Menor número de exámenes extraordinarios (NMS)',v:5,c:'var(--yellow)',note:'Menos extraordinarios = mejor puntaje en este criterio.'},
+          ].map(c=>(
+            <div key={c.n} style={{marginBottom:20}}>
+              <div className="flex justify-between items-center mb-1">
+                <span style={{fontSize:14,fontWeight:600}}>{c.n}</span>
+                <span style={{fontSize:20,fontWeight:700,color:c.c}}>{c.v}%</span>
+              </div>
+              <div className="progress-bar mb-1"><div className="progress-fill" style={{width:c.v+'%',background:c.c}}></div></div>
+              <div style={{fontSize:12,color:'var(--text3)'}}>{c.note}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {tab==='estructura' && (
+        <div className="card">
+          <div style={{fontSize:16,fontWeight:700,marginBottom:16}}>Estructura del EXCOBA (180 reactivos)</div>
+          <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
+            <thead>
+              <tr style={{borderBottom:'2px solid var(--border)'}}>
+                <th style={{textAlign:'left',padding:'8px',color:'var(--text2)'}}>Sección</th>
+                <th style={{textAlign:'center',padding:'8px',color:'var(--text2)'}}>Reactivos</th>
+                <th style={{textAlign:'center',padding:'8px',color:'var(--text2)'}}>% del total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {EXAM_INFO.excoba.structure.map((s,i)=>(
+                <tr key={i} style={{borderBottom:'1px solid var(--border)'}}>
+                  <td style={{padding:'8px'}}>{s.section}</td>
+                  <td style={{padding:'8px',textAlign:'center',fontWeight:700,color:'var(--accent)'}}>{s.count}</td>
+                  <td style={{padding:'8px',textAlign:'center',color:'var(--text3)'}}>{Math.round(s.count/180*100)}%</td>
+                </tr>
+              ))}
+              <tr style={{borderTop:'2px solid var(--border)',fontWeight:700}}>
+                <td style={{padding:'8px'}}>TOTAL</td>
+                <td style={{padding:'8px',textAlign:'center',color:'var(--accent)'}}>180</td>
+                <td style={{padding:'8px',textAlign:'center'}}>100%</td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="alert alert-info mt-3" style={{fontSize:12}}>Fuente: Instructivo oficial EXCOBA-UGTO 2022, Métrica Educativa A.C. Verificado en ugto.mx</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── SIMULACRO ────────────────────────────────────────────────────────────────
+function SimulacroPage({ addResult, addErrors }) {
+  const [phase, setPhase] = useState('config'); // config | exam | results
+  const [examType, setExamType] = useState('excoba');
+  const [questions, setQuestions] = useState([]);
+  const [current, setCurrent] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [flags, setFlags] = useState(new Set());
+  const [time, setTime] = useState(0);
+  const [started, setStarted] = useState(false);
+  const [resultData, setResultData] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const timerRef = useRef(null);
+
+  useEffect(()=>{
+    if(started && phase==='exam'){
+      timerRef.current = setInterval(()=>setTime(t=>t+1),1000);
+    }
+    return ()=>clearInterval(timerRef.current);
+  },[started, phase]);
+
+  function startExam() {
+    const pool = QUESTION_BANK.filter(q => examType==='excoba' ? q.subj!=='Conocimientos Divisionales' : q.subj==='Conocimientos Divisionales');
+    const q = shuffle(pool).slice(0, Math.min(pool.length, examType==='excoba' ? 20 : 10));
+    if(q.length === 0){
+      alert('No hay preguntas disponibles para este examen. Usa la práctica por materia.');
+      return;
+    }
+    setQuestions(q); setAnswers({}); setFlags(new Set()); setTime(0); setCurrent(0);
+    setPhase('exam'); setStarted(true);
+  }
+
+  function selectAnswer(qi, optIdx) {
+    if(answers[qi]!==undefined) return;
+    setAnswers(prev=>({...prev,[qi]:optIdx}));
+  }
+
+  function toggleFlag(i){ setFlags(prev=>{ const s=new Set(prev); s.has(i)?s.delete(i):s.add(i); return s; }); }
+
+  function submitExam() {
+    clearInterval(timerRef.current);
+    let correct=0; const bySubj={};
+    const newErrors=[];
+    questions.forEach((q,i)=>{
+      const s=q.subj;
+      if(!bySubj[s]) bySubj[s]={c:0,t:0};
+      bySubj[s].t++;
+      if(answers[i]===q.ans){ correct++; bySubj[s].c++; }
+      else {
+        newErrors.push({qid:q.id,subj:q.subj,topic:q.topic,text:q.text,myAns:answers[i],correctAns:q.ans,opts:q.opts,exp:q.exp,date:now(),time:Math.round(time/questions.length)});
+      }
+    });
+    const r={id:Date.now(),mode:'simulacro',type:examType,total:questions.length,correct,pct:pct(correct,questions.length),time,date:now(),bySubj};
+    addResult(r); addErrors(newErrors);
+    setResultData({r,questions,answers,newErrors}); setPhase('results');
+  }
+
+  if(phase==='config') return (
+    <div>
+      <div className="page-header"><div className="page-title">📝 Simulacro</div><div className="page-sub">Condiciones de examen · Sin respuestas durante el intento</div></div>
+      <div style={{maxWidth:500}}>
+        <div className="card mb-4">
+          <div className="section-title">Selecciona el examen</div>
+          {[{v:'excoba',l:'EXCOBA – Competencias Básicas',sub:'25% · 180 reactivos oficiales · Física, Biología, Química + areas generales'},{v:'divisional',l:'Examen Divisional (muestra)',sub:'50% · Contenidos médicos · ⚠️ Banco limitado por ahora'}].map(o=>(
+            <div key={o.v} onClick={()=>setExamType(o.v)} style={{padding:16,borderRadius:8,border:`2px solid ${examType===o.v?'var(--accent)':'var(--border)'}`,background:examType===o.v?'rgba(29,168,160,.08)':'var(--bg3)',cursor:'pointer',marginBottom:10}}>
+              <div style={{fontWeight:700,marginBottom:4}}>{o.l}</div>
+              <div style={{fontSize:12,color:'var(--text3)'}}>{o.sub}</div>
+            </div>
+          ))}
+        </div>
+        <div className="alert alert-info mb-4">ℹ️ Durante el simulacro no verás las respuestas correctas. Al terminar recibirás tu calificación y el análisis de errores.</div>
+        <button className="btn btn-primary btn-lg w-full" onClick={startExam}>🚀 Iniciar Simulacro</button>
+      </div>
+    </div>
+  );
+
+  if(phase==='results' && resultData) {
+    const {r,questions:qs,answers:ans,newErrors} = resultData;
+    return (
+      <div>
+        <div className="page-header"><div className="page-title">✅ Resultados del Simulacro</div></div>
+        <div className="grid3 mb-4">
+          <div className="stat-card teal"><div className="stat-val">{r.pct}%</div><div className="stat-lbl">Calificación</div></div>
+          <div className="stat-card green"><div className="stat-val">{r.correct}</div><div className="stat-lbl">Correctas</div><div className="stat-sub">de {r.total}</div></div>
+          <div className="stat-card red"><div className="stat-val">{r.total-r.correct}</div><div className="stat-lbl">Incorrectas</div><div className="stat-sub">→ Registro de errores</div></div>
+        </div>
+        <div className="card mb-4">
+          <div style={{textAlign:'center',padding:'8px 0',marginBottom:16}}>
+            <div style={{fontSize:56,fontWeight:800,color:r.pct>=70?'var(--green)':r.pct>=50?'var(--yellow)':'var(--red)'}}>{r.pct}%</div>
+            <div style={{fontSize:14,color:'var(--text2)'}}>Tiempo total: {formatTime(r.time)}</div>
+          </div>
+          <div className="section-title">Por materia</div>
+          {Object.entries(r.bySubj).map(([s,d])=>(
+            <div key={s} className="mastery-bar-wrap">
+              <div className="mastery-label"><span style={{fontSize:12}}>{s}</span><span style={{fontWeight:700,color:pct(d.c,d.t)>=70?'var(--green)':pct(d.c,d.t)>=50?'var(--yellow)':'var(--red)'}}>{pct(d.c,d.t)}%</span></div>
+              <div className="progress-bar"><div className="progress-fill" style={{width:pct(d.c,d.t)+'%',background:pct(d.c,d.t)>=70?'var(--green)':pct(d.c,d.t)>=50?'var(--yellow)':'var(--red)'}}></div></div>
+            </div>
+          ))}
+        </div>
+
+        {newErrors.length > 0 && (
+          <div className="card mb-4">
+            <div className="section-title">🔴 Reactivos incorrectos – Análisis de errores</div>
+            {newErrors.map((e,i)=>(
+              <div key={i} className="error-item" style={{marginBottom:14}}>
+                <div className="flex justify-between mb-2">
+                  <span style={{fontSize:11,color:'var(--text3)'}}>{e.subj} · {e.topic}</span>
+                  <span className="tag tag-red">Incorrecto</span>
+                </div>
+                <div style={{fontSize:14,marginBottom:10,lineHeight:1.6}}>{e.text}</div>
+                <div style={{marginBottom:6}}>
+                  <span style={{fontSize:12,color:'var(--red)'}}>❌ Tu respuesta: {e.opts[e.myAns] ?? 'Sin responder'}</span>
+                </div>
+                <div style={{marginBottom:10}}>
+                  <span style={{fontSize:12,color:'var(--green)'}}>✅ Respuesta correcta: {e.opts[e.correctAns]}</span>
+                </div>
+                <div className="explanation">
+                  <div className="explanation-title">Explicación</div>
+                  <p>{e.exp}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        <button className="btn btn-primary" onClick={()=>setPhase('config')}>Nuevo simulacro</button>
+      </div>
+    );
+  }
+
+  if(phase==='exam') {
+    const q = questions[current];
+    const answered = Object.keys(answers).length;
+    return (
+      <div className="quiz-container">
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <span className="tag tag-teal">{examType==='excoba'?'EXCOBA':'Divisional'}</span>
+            <span style={{marginLeft:8,fontSize:13,color:'var(--text2)'}}>{answered}/{questions.length} respondidas</span>
+          </div>
+          <div className={`timer ${time>3600?'urgent':time>2400?'warn':''}`}>⏱ {formatTime(time)}</div>
+        </div>
+
+        <div className="question-grid mb-2">
+          {questions.map((_,i)=>(
+            <div key={i} className={`q-dot ${i===current?'current':''} ${flags.has(i)?'flagged':''} ${answers[i]!==undefined&&i!==current?'answered':''}`} onClick={()=>setCurrent(i)}>{i+1}</div>
+          ))}
+        </div>
+
+        <div className="question-card">
+          <div className="question-number">Reactivo {current+1} de {questions.length} · {q.subj}</div>
+          <div className="question-text">{q.text}</div>
+          {q.opts.map((o,i)=>(
+            <button key={i} className={`option-btn ${answers[current]===i?'selected':''}`} onClick={()=>selectAnswer(current,i)} disabled={answers[current]!==undefined}>
+              <span className="option-letter">{['A','B','C','D'][i]}</span>
+              <span>{o.replace(/^[A-D]\) /,'')}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="nav-bar mt-4">
+          <button className="btn btn-secondary btn-sm" onClick={()=>setCurrent(Math.max(0,current-1))} disabled={current===0}>← Anterior</button>
+          <button className="btn btn-secondary btn-sm" onClick={()=>toggleFlag(current)}>{flags.has(current)?'🏴 Marcada':'🚩 Marcar'}</button>
+          <button className="btn btn-secondary btn-sm" onClick={()=>setCurrent(Math.min(questions.length-1,current+1))} disabled={current===questions.length-1}>Siguiente →</button>
+          <button className="btn btn-danger btn-sm" style={{marginLeft:'auto'}} onClick={()=>setShowConfirm(true)}>Entregar</button>
+        </div>
+
+        {showConfirm && (
+          <div className="overlay" onClick={()=>setShowConfirm(false)}>
+            <div className="modal" onClick={e=>e.stopPropagation()}>
+              <div className="modal-title">¿Entregar examen?</div>
+              <div style={{fontSize:13,color:'var(--text2)',marginBottom:16}}>
+                <div>Respondidas: {answered}/{questions.length}</div>
+                <div>Sin responder: {questions.length-answered}</div>
+                {flags.size>0 && <div>Marcadas: {flags.size}</div>}
+              </div>
+              {answered<questions.length && <div className="alert alert-warn">Tienes {questions.length-answered} preguntas sin responder.</div>}
+              <div className="flex gap-2 mt-4">
+                <button className="btn btn-secondary" onClick={()=>setShowConfirm(false)}>Revisar</button>
+                <button className="btn btn-danger" onClick={()=>{setShowConfirm(false);submitExam();}}>Sí, entregar</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+  return null;
+}
+
+// ─── PRACTICE PAGE ────────────────────────────────────────────────────────────
+function PracticePage({ addResult, addErrors, markErrorFixed }) {
+  const [phase, setPhase] = useState('config');
+  const [selSubj, setSelSubj] = useState('Biología (Bachillerato)');
+  const [count, setCount] = useState(10);
+  const [questions, setQuestions] = useState([]);
+  const [current, setCurrent] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [showExp, setShowExp] = useState({});
+  const [results, setResults] = useState(null);
+
+  function start() {
+    const pool = QUESTION_BANK.filter(q=>q.subj===selSubj);
+    if(pool.length===0){ alert('No hay preguntas para esta materia todavía.'); return; }
+    const q = shuffle(pool).slice(0,Math.min(count,pool.length));
+    setQuestions(q); setAnswers({}); setShowExp({}); setCurrent(0); setResults(null); setPhase('exam');
+  }
+
+  function answer(i, opt) {
+    if(answers[i]!==undefined) return;
+    const newAns = {...answers,[i]:opt};
+    setAnswers(newAns);
+    setShowExp(prev=>({...prev,[i]:true}));
+    // Mark error or fixed
+    const q = questions[i];
+    if(opt===q.ans) markErrorFixed(q.id);
+    else addErrors([{qid:q.id,subj:q.subj,topic:q.topic,text:q.text,myAns:opt,correctAns:q.ans,opts:q.opts,exp:q.exp,date:now()}]);
+  }
+
+  function finish() {
+    const correct = questions.filter((q,i)=>answers[i]===q.ans).length;
+    addResult({id:Date.now(),mode:'practice',subj:selSubj,total:questions.length,correct,pct:pct(correct,questions.length),date:now(),bySubj:{[selSubj]:{c:correct,t:questions.length}}});
+    setResults({correct,total:questions.length});
+    setPhase('results');
+  }
+
+  if(phase==='config') return (
+    <div>
+      <div className="page-header"><div className="page-title">🎯 Práctica por Materia</div></div>
+      <div style={{maxWidth:500}}>
+        <div className="card mb-4">
+          <div className="form-group">
+            <label className="form-label">Materia</label>
+            <select value={selSubj} onChange={e=>setSelSubj(e.target.value)}>
+              {Object.entries(SUBJECTS).map(([s,d])=>(
+                <option key={s} value={s}>{s} · {d.area}</option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Número de preguntas: <strong>{count}</strong></label>
+            <input type="range" min={5} max={30} value={count} onChange={e=>setCount(+e.target.value)} />
+            <div className="flex justify-between text-xs text-dim mt-1"><span>5</span><span>30</span></div>
+          </div>
+          <div className="alert alert-info">En el modo práctica, verás la explicación inmediatamente después de responder cada pregunta.</div>
+          <button className="btn btn-primary w-full mt-2" onClick={start}>Comenzar práctica</button>
+        </div>
+        <div className="card">
+          <div className="section-title">Temas disponibles en {selSubj}</div>
+          <div className="flex flex-col gap-1">
+            {(SUBJECTS[selSubj]?.topics||[]).map(t=>(
+              <div key={t} className="flex items-center gap-2" style={{fontSize:13,padding:'4px 0',borderBottom:'1px solid var(--border)'}}>
+                <span style={{color:'var(--accent)'}}>•</span>{t}
+                <span style={{fontSize:11,color:'var(--text3)',marginLeft:'auto'}}>{QUESTION_BANK.filter(q=>q.subj===selSubj&&q.topic===t).length} preg.</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if(phase==='results') return (
+    <div style={{maxWidth:500}}>
+      <div className="page-header"><div className="page-title">Resultados de Práctica</div></div>
+      <div className="card mb-4" style={{textAlign:'center',padding:32}}>
+        <div style={{fontSize:56,fontWeight:800,color:results.pct>=70?'var(--green)':results.pct>=50?'var(--yellow)':'var(--red)',marginBottom:8}}>{pct(results.correct,results.total)}%</div>
+        <div style={{fontSize:14,color:'var(--text2)'}}>{results.correct} de {results.total} correctas</div>
+      </div>
+      <div className="flex gap-2">
+        <button className="btn btn-primary" onClick={()=>setPhase('config')}>Nueva práctica</button>
+        <button className="btn btn-secondary" onClick={()=>setPhase('exam')}>Revisar respuestas</button>
+      </div>
+    </div>
+  );
+
+  const q = questions[current];
+  const allAnswered = questions.every((_,i)=>answers[i]!==undefined);
+
+  return (
+    <div className="quiz-container">
+      <div className="flex justify-between items-center mb-3">
+        <span style={{fontSize:13,color:'var(--text2)'}}>{selSubj}</span>
+        <span style={{fontSize:13,color:'var(--text2)'}}>{current+1}/{questions.length}</span>
+      </div>
+      <div className="question-grid mb-3">
+        {questions.map((_,i)=>(
+          <div key={i} className={`q-dot ${i===current?'current':''} ${answers[i]!==undefined&&answers[i]===questions[i].ans?'correct-dot':''} ${answers[i]!==undefined&&answers[i]!==questions[i].ans?'wrong-dot':''}`} onClick={()=>setCurrent(i)}>{i+1}</div>
+        ))}
+      </div>
+      <div className="question-card">
+        <div className="question-number">Reactivo {current+1} · {q.subj} · {q.topic}</div>
+        <div className="question-text">{q.text}</div>
+        {q.opts.map((o,i)=>(
+          <button key={i} onClick={()=>answer(current,i)}
+            className={`option-btn ${answers[current]===undefined?'':answers[current]===i&&i===q.ans?'correct':answers[current]===i&&i!==q.ans?'wrong':i===q.ans&&showExp[current]?'correct':''}`}
+            disabled={answers[current]!==undefined}>
+            <span className="option-letter">{['A','B','C','D'][i]}</span>
+            <span>{o.replace(/^[A-D]\) /,'')}</span>
+          </button>
+        ))}
+        {showExp[current] && (
+          <div className="explanation">
+            <div className="explanation-title">{answers[current]===q.ans?'✅ ¡Correcto!':'❌ Incorrecto'}</div>
+            <p><strong>Respuesta correcta:</strong> {q.opts[q.ans]}</p>
+            <p>{q.exp}</p>
+          </div>
+        )}
+      </div>
+      <div className="nav-bar mt-3">
+        <button className="btn btn-secondary btn-sm" onClick={()=>setCurrent(Math.max(0,current-1))} disabled={current===0}>←</button>
+        <button className="btn btn-secondary btn-sm" onClick={()=>setCurrent(Math.min(questions.length-1,current+1))} disabled={current===questions.length-1}>→</button>
+        {allAnswered && <button className="btn btn-primary btn-sm" style={{marginLeft:'auto'}} onClick={finish}>Ver resultados</button>}
+      </div>
+    </div>
+  );
+}
+
+// ─── ERRORS PAGE ─────────────────────────────────────────────────────────────
+function ErrorsPage({ errors, setErrors, addResult, addErrors, markErrorFixed }) {
+  const [filter, setFilter] = useState('all');
+  const [revancha, setRevancha] = useState(null);
+  const [revAns, setRevAns] = useState(null);
+
+  const pending = errors.filter(e=>e.status!=='mastered');
+  const filtered = filter==='all' ? pending : pending.filter(e=>e.subj===filter);
+  const subjects = [...new Set(pending.map(e=>e.subj))];
+
+  function startRevancha(err) { setRevancha(err); setRevAns(null); }
+  function answerRevancha(opt) {
+    setRevAns(opt);
+    if(opt===revancha.correctAns) markErrorFixed(revancha.qid);
+  }
+  function dismissError(qid) { setErrors(prev=>prev.map(e=>e.qid===qid?{...e,status:'mastered'}:e)); }
+
+  if(revancha) return (
+    <div className="quiz-container">
+      <div className="page-header"><div className="page-title">🥊 Revancha</div></div>
+      <div className="question-card">
+        <div className="question-number">{revancha.subj} · {revancha.topic}</div>
+        <div className="question-text">{revancha.text}</div>
+        {revancha.opts.map((o,i)=>(
+          <button key={i} onClick={()=>{if(revAns===null)answerRevancha(i);}}
+            className={`option-btn ${revAns===null?'':revAns===i&&i===revancha.correctAns?'correct':revAns===i&&i!==revancha.correctAns?'wrong':i===revancha.correctAns&&revAns!==null?'correct':''}`}
+            disabled={revAns!==null}>
+            <span className="option-letter">{['A','B','C','D'][i]}</span>
+            <span>{o.replace(/^[A-D]\) /,'')}</span>
+          </button>
+        ))}
+        {revAns!==null && (
+          <div className="explanation">
+            <div className="explanation-title">{revAns===revancha.correctAns?'✅ ¡Correcto! Error corregido.':'❌ Sigue pendiente'}</div>
+            <p>{revancha.exp}</p>
+          </div>
+        )}
+      </div>
+      <div className="nav-bar mt-4">
+        <button className="btn btn-secondary" onClick={()=>setRevancha(null)}>← Volver a errores</button>
+        {revAns!==null && <button className="btn btn-primary" style={{marginLeft:'auto'}} onClick={()=>setRevancha(null)}>Siguiente error</button>}
+      </div>
+    </div>
+  );
+
+  return (
+    <div>
+      <div className="page-header">
+        <div className="page-title">🔴 Mis Errores</div>
+        <div className="page-sub">{pending.length} errores pendientes · {errors.filter(e=>e.status==='mastered').length} dominados</div>
+      </div>
+
+      {pending.length===0 ? (
+        <div className="card" style={{textAlign:'center',padding:40}}>
+          <div style={{fontSize:48,marginBottom:8}}>🎉</div>
+          <div style={{fontSize:16,fontWeight:700}}>¡Sin errores pendientes!</div>
+          <div style={{fontSize:13,color:'var(--text2)',marginTop:8}}>Completa un simulacro o práctica para registrar tus errores.</div>
+        </div>
+      ) : (
+        <>
+          <div className="flex gap-2 mb-4" style={{flexWrap:'wrap'}}>
+            <button className={`btn btn-sm ${filter==='all'?'btn-primary':'btn-secondary'}`} onClick={()=>setFilter('all')}>Todos ({pending.length})</button>
+            {subjects.map(s=>(
+              <button key={s} className={`btn btn-sm ${filter===s?'btn-primary':'btn-secondary'}`} onClick={()=>setFilter(s)}>{s.split(' ')[0]} ({pending.filter(e=>e.subj===s).length})</button>
+            ))}
+          </div>
+
+          {filtered.map(e=>(
+            <div key={e.qid} className={`error-item ${e.status||'pending'}`}>
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <span className="tag tag-red" style={{marginRight:6}}>{e.attempts||1}x fallida</span>
+                  <span style={{fontSize:11,color:'var(--text3)'}}>{e.subj} · {e.topic}</span>
+                </div>
+                <span style={{fontSize:11,color:'var(--text3)'}}>{e.lastDate||e.addedDate}</span>
+              </div>
+              <div style={{fontSize:14,lineHeight:1.6,marginBottom:10}}>{e.text}</div>
+              <div style={{fontSize:12,marginBottom:4}}>
+                <span style={{color:'var(--red)'}}>❌ Mi respuesta: {e.opts?.[e.myAns] ?? 'Sin responder'}</span>
+              </div>
+              <div style={{fontSize:12,marginBottom:12}}>
+                <span style={{color:'var(--green)'}}>✅ Correcta: {e.opts?.[e.correctAns]}</span>
+              </div>
+              {e.exp && (
+                <details style={{marginBottom:10}}>
+                  <summary style={{fontSize:12,color:'var(--accent)',cursor:'pointer'}}>Ver explicación</summary>
+                  <div className="explanation" style={{marginTop:8}}>
+                    <p>{e.exp}</p>
+                  </div>
+                </details>
+              )}
+              <div className="flex gap-2">
+                <button className="btn btn-primary btn-sm" onClick={()=>startRevancha(e)}>🥊 Revancha</button>
+                <button className="btn btn-secondary btn-sm" onClick={()=>dismissError(e.qid)}>Marcar dominada</button>
+              </div>
+            </div>
+          ))}
+        </>
+      )}
+    </div>
+  );
+}
+
+// ─── FLASHCARDS ───────────────────────────────────────────────────────────────
+function FlashcardsPage({ flashcards, setFlashcards }) {
+  const [idx, setIdx] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const [filter, setFilter] = useState('all');
+  const [adding, setAdding] = useState(false);
+  const [newFront, setNewFront] = useState('');
+  const [newBack, setNewBack] = useState('');
+  const [newSubj, setNewSubj] = useState('Biología (Bachillerato)');
+
+  const filtered = filter==='all' ? flashcards : flashcards.filter(f=>f.mastery<3);
+  const card = filtered[idx];
+
+  function next() { setFlipped(false); setTimeout(()=>setIdx(i=>(i+1)%filtered.length),150); }
+  function prev() { setFlipped(false); setTimeout(()=>setIdx(i=>(i-1+filtered.length)%filtered.length),150); }
+  function rate(level) {
+    setFlashcards(prev=>prev.map((f,i)=>filtered[idx]&&f.id===filtered[idx].id?{...f,mastery:Math.min(5,Math.max(0,level)),history:[...(f.history||[]),{date:now(),level}]}:f));
+    next();
+  }
+  function addCard() {
+    if(!newFront.trim()||!newBack.trim()) return;
+    const nc={id:'FC'+Date.now(),subj:newSubj,front:newFront.trim(),back:newBack.trim(),mastery:0,history:[]};
+    setFlashcards(prev=>[...prev,nc]);
+    setNewFront(''); setNewBack(''); setAdding(false);
+  }
+
+  if(flashcards.length===0) return <div className="card" style={{textAlign:'center',padding:40}}>Sin flashcards. ¡Crea una!</div>;
+
+  return (
+    <div>
+      <div className="page-header">
+        <div className="flex justify-between items-center">
+          <div><div className="page-title">🃏 Flashcards</div><div className="page-sub">Repaso espaciado · {flashcards.length} tarjetas</div></div>
+          <button className="btn btn-primary btn-sm" onClick={()=>setAdding(true)}>+ Nueva</button>
+        </div>
+      </div>
+
+      <div className="tabs">
+        <button className={`tab ${filter==='all'?'active':''}`} onClick={()=>{setFilter('all');setIdx(0);setFlipped(false);}}>Todas ({flashcards.length})</button>
+        <button className={`tab ${filter==='pending'?'active':''}`} onClick={()=>{setFilter('pending');setIdx(0);setFlipped(false);}}>Pendientes ({flashcards.filter(f=>f.mastery<3).length})</button>
+      </div>
+
+      {card && (
+        <>
+          <div style={{textAlign:'center',marginBottom:8,fontSize:12,color:'var(--text3)'}}>{idx+1} / {filtered.length} · {card.subj}</div>
+          <div className={`flashcard ${flipped?'flipped':''}`} onClick={()=>setFlipped(f=>!f)} style={{maxWidth:560,margin:'0 auto',marginBottom:16}}>
+            <div className="flashcard-inner" style={{minHeight:220}}>
+              <div className="flashcard-front">
+                <div style={{fontSize:11,color:'var(--text3)',marginBottom:12,textTransform:'uppercase',letterSpacing:.5}}>Pregunta — clic para revelar</div>
+                <div style={{fontSize:17,fontWeight:600,lineHeight:1.5}}>{card.front}</div>
+              </div>
+              <div className="flashcard-back">
+                <div style={{fontSize:11,color:'var(--accent)',marginBottom:12,textTransform:'uppercase',letterSpacing:.5}}>Respuesta</div>
+                <div style={{fontSize:14,lineHeight:1.6,color:'var(--text)'}}>{card.back}</div>
+              </div>
+            </div>
+          </div>
+          {flipped && (
+            <div style={{maxWidth:560,margin:'0 auto'}}>
+              <div style={{fontSize:12,color:'var(--text2)',textAlign:'center',marginBottom:8}}>¿Qué tan bien lo sabías?</div>
+              <div className="conf-btns">
+                <button className="conf-btn hard" onClick={()=>rate(0)}>No lo sabía</button>
+                <button className="conf-btn medium" onClick={()=>rate(2)}>Con duda</button>
+                <button className="conf-btn easy" onClick={()=>rate(4)}>Lo sabía bien</button>
+              </div>
+            </div>
+          )}
+          <div className="flex justify-center gap-4 mt-4">
+            <button className="btn btn-secondary btn-sm" onClick={prev}>← Anterior</button>
+            <button className="btn btn-secondary btn-sm" onClick={()=>setFlipped(f=>!f)}>Voltear</button>
+            <button className="btn btn-secondary btn-sm" onClick={next}>Siguiente →</button>
+          </div>
+          <div style={{textAlign:'center',marginTop:12}}>
+            <div style={{fontSize:11,color:'var(--text3)'}}>Dominio: {'★'.repeat(card.mastery||0)}{'☆'.repeat(5-(card.mastery||0))}</div>
+          </div>
+        </>
+      )}
+
+      {adding && (
+        <div className="overlay" onClick={()=>setAdding(false)}>
+          <div className="modal" onClick={e=>e.stopPropagation()}>
+            <div className="modal-title">Nueva Flashcard</div>
+            <div className="form-group">
+              <label className="form-label">Materia</label>
+              <select value={newSubj} onChange={e=>setNewSubj(e.target.value)}>
+                {Object.keys(SUBJECTS).map(s=><option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Pregunta / Concepto (frente)</label>
+              <textarea className="form-input" rows={3} value={newFront} onChange={e=>setNewFront(e.target.value)} placeholder="Ej: ¿Qué es la glucólisis?"/>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Respuesta (dorso)</label>
+              <textarea className="form-input" rows={4} value={newBack} onChange={e=>setNewBack(e.target.value)} placeholder="Ej: Proceso de degradación de glucosa..."/>
+            </div>
+            <div className="flex gap-2">
+              <button className="btn btn-secondary" onClick={()=>setAdding(false)}>Cancelar</button>
+              <button className="btn btn-primary" onClick={addCard} disabled={!newFront.trim()||!newBack.trim()}>Guardar tarjeta</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── STATS ────────────────────────────────────────────────────────────────────
+function StatsPage({ results, errors }) {
+  const totalQ = results.reduce((s,r)=>s+r.total,0);
+  const totalRight = results.reduce((s,r)=>s+r.correct,0);
+  const subjMap = {};
+  results.forEach(r=>{ if(r.bySubj) Object.entries(r.bySubj).forEach(([s,d])=>{
+    if(!subjMap[s]) subjMap[s]={c:0,t:0};
+    subjMap[s].c+=d.c; subjMap[s].t+=d.t;
+  });});
+
+  const subjArr = Object.entries(subjMap).filter(([,d])=>d.t>0).sort((a,b)=>pct(b[1].c,b[1].t)-pct(a[1].c,a[1].t));
+  const simResults = results.filter(r=>r.mode==='simulacro').slice(0,8).reverse();
+
+  return (
+    <div>
+      <div className="page-header"><div className="page-title">📊 Estadísticas y Evolución</div></div>
+
+      <div className="grid4 mb-4">
+        <div className="stat-card teal"><div className="stat-val">{totalQ}</div><div className="stat-lbl">Reactivos totales</div></div>
+        <div className="stat-card green"><div className="stat-val">{totalRight}</div><div className="stat-lbl">Correctas</div></div>
+        <div className="stat-card red"><div className="stat-val">{totalQ-totalRight}</div><div className="stat-lbl">Incorrectas</div></div>
+        <div className="stat-card blue"><div className="stat-val">{totalQ?pct(totalRight,totalQ)+'%':'—'}</div><div className="stat-lbl">Promedio global</div></div>
+      </div>
+
+      {subjArr.length>0 && (
+        <div className="card mb-4">
+          <div className="section-title">Rendimiento por materia</div>
+          {subjArr.map(([s,d])=>{
+            const p=pct(d.c,d.t);
+            return (
+              <div key={s} className="mastery-bar-wrap">
+                <div className="mastery-label">
+                  <span style={{fontSize:12}}>{s}</span>
+                  <span style={{color:p>=70?'var(--green)':p>=50?'var(--yellow)':'var(--red)',fontWeight:700}}>{p}% <span style={{color:'var(--text3)',fontWeight:400}}>({d.c}/{d.t})</span></span>
+                </div>
+                <div className="progress-bar"><div className="progress-fill" style={{width:p+'%',background:p>=70?'var(--green)':p>=50?'var(--yellow)':'var(--red)'}}></div></div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {simResults.length>1 && (
+        <div className="card mb-4">
+          <div className="section-title">Evolución de simulacros</div>
+          <div className="bar-chart">
+            {simResults.map((r,i)=>(
+              <div key={i} className="bar-wrap">
+                <div className="bar-val">{r.pct}%</div>
+                <div className="bar" style={{height:(r.pct/100*140)+'px',background:r.pct>=70?'var(--green)':r.pct>=50?'var(--yellow)':'var(--red)'}}></div>
+                <div className="bar-lbl">{r.date}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {results.length===0 && (
+        <div className="card" style={{textAlign:'center',padding:40}}>
+          <div style={{fontSize:36,marginBottom:8}}>📊</div>
+          <div style={{fontSize:14,color:'var(--text2)'}}>Completa exámenes para ver tus estadísticas aquí.</div>
+        </div>
+      )}
+
+      <div className="card">
+        <div className="section-title">Últimas sesiones</div>
+        {results.length===0 ? <div style={{fontSize:13,color:'var(--text3)'}}>Sin sesiones registradas.</div> :
+          results.slice(0,10).map((r,i)=>(
+            <div key={i} className="flex justify-between items-center" style={{padding:'8px 0',borderBottom:'1px solid var(--border)'}}>
+              <div>
+                <span className="tag tag-teal" style={{marginRight:8}}>{r.mode==='simulacro'?'Simulacro':'Práctica'}</span>
+                <span style={{fontSize:12,color:'var(--text2)'}}>{r.subj||r.type||''}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span style={{fontSize:12,color:'var(--text3)'}}>{r.date}</span>
+                <span style={{fontWeight:700,color:r.pct>=70?'var(--green)':r.pct>=50?'var(--yellow)':'var(--red)'}}>{r.pct}%</span>
+              </div>
+            </div>
+          ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── TUTOR ────────────────────────────────────────────────────────────────────
+function TutorPage() {
+  const [messages, setMessages] = useState([
+    {role:'ai',text:'Hola. Soy tu Tutor IA para la admisión a Medicina en la UG. Puedo explicarte cualquier tema del EXCOBA (Física, Biología, Química, Matemáticas, Español, Ciencias Sociales) o del examen divisional. ¿Qué quieres estudiar hoy?'}
+  ]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const bottomRef = useRef();
+
+  useEffect(()=>{ bottomRef.current?.scrollIntoView({behavior:'smooth'}); },[messages]);
+
+  async function send() {
+    const text = input.trim();
+    if(!text||loading) return;
+    setInput('');
+    const newMsgs = [...messages,{role:'user',text}];
+    setMessages(newMsgs);
+    setLoading(true);
+    try {
+      const history = newMsgs.map(m=>({role:m.role==='ai'?'assistant':'user',content:m.text}));
+      const res = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+        model:'claude-sonnet-4-6',max_tokens:1000,
+        system:`Eres un tutor especializado en preparar aspirantes al examen de admisión a Médico Cirujano de la Universidad de Guanajuato (Campus León, proceso Enero-Junio 2027).
+
+Los dos exámenes clave son:
+1. EXCOBA (25%): 180 reactivos de Español, Matemáticas, Ciencias Naturales, Ciencias Sociales (primaria y secundaria) + Física, Biología y Química de bachillerato.
+2. Examen Divisional (50%): conocimientos específicos de medicina/ciencias de la salud.
+
+Reglas pedagógicas:
+- No des la respuesta inmediata: guía con preguntas y pistas graduales.
+- Explica paso a paso con procedimientos completos para problemas numéricos.
+- Para ciencias, explica el concepto fundamental antes de la aplicación.
+- Usa analogías y ejemplos concretos.
+- Al final de cada explicación, haz una pregunta corta de verificación.
+- Si el estudiante comete un error en su razonamiento, identifícalo con amabilidad.
+- Sé conciso pero completo. Responde en español.`,
+        messages:history
+      })});
+      const data = await res.json();
+      const reply = data.content?.map(c=>c.text||'').join('') || 'No pude obtener respuesta. Verifica tu conexión.';
+      setMessages(prev=>[...prev,{role:'ai',text:reply}]);
+    } catch(e) {
+      setMessages(prev=>[...prev,{role:'ai',text:'Error de conexión. Asegúrate de estar en línea. El tutor IA requiere conexión a internet.'}]);
+    }
+    setLoading(false);
+  }
+
+  const suggestions = ['Explícame la mitosis paso a paso','¿Cómo balanceo ecuaciones químicas?','Explica la Segunda Ley de Newton con un ejemplo','¿Qué diferencia hay entre mitosis y meiosis?','Enséñame a resolver ecuaciones cuadráticas'];
+
+  return (
+    <div>
+      <div className="page-header"><div className="page-title">🤖 Tutor Inteligente</div><div className="page-sub">Impulsado por Claude · Especializado en admisión UG Medicina</div></div>
+      <div className="card" style={{maxWidth:700}}>
+        <div className="chat-messages">
+          {messages.map((m,i)=>(
+            <div key={i} className={`chat-msg ${m.role}`} style={{whiteSpace:'pre-wrap'}}>{m.text}</div>
+          ))}
+          {loading && <div className="chat-msg ai"><span style={{color:'var(--text3)'}}>Pensando…</span></div>}
+          <div ref={bottomRef}/>
+        </div>
+        {messages.length<=1 && (
+          <div className="mt-3">
+            <div style={{fontSize:11,color:'var(--text3)',marginBottom:8}}>Sugerencias:</div>
+            <div className="flex flex-col gap-1">
+              {suggestions.map(s=>(
+                <button key={s} className="btn btn-secondary btn-sm" style={{textAlign:'left',justifyContent:'flex-start'}} onClick={()=>setInput(s)}>{s}</button>
+              ))}
+            </div>
+          </div>
+        )}
+        <div className="chat-input-area">
+          <textarea className="chat-input" rows={2} value={input} onChange={e=>setInput(e.target.value)} placeholder="Escribe tu pregunta o tema a estudiar..." onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}}/>
+          <button className="btn btn-primary" onClick={send} disabled={loading||!input.trim()}>Enviar</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── CALENDAR ─────────────────────────────────────────────────────────────────
+function CalendarPage({ config, setConfig }) {
+  const [view, setView] = useState('week');
+  const today = new Date();
+  const [tasks, setTasks] = useState(()=>loadData('tasks',{}));
+  const [selDay, setSelDay] = useState(null);
+  const [taskText, setTaskText] = useState('');
+
+  useEffect(()=>saveData('tasks',tasks),[tasks]);
+
+  const examDate = new Date(config.examDate+'T12:00:00');
+  const daysLeft = Math.max(0,Math.ceil((examDate-today)/(1000*60*60*24)));
+
+  function addTask() {
+    if(!taskText.trim()||!selDay) return;
+    const key=selDay;
+    setTasks(prev=>({...prev,[key]:[...(prev[key]||[]),{text:taskText.trim(),done:false,id:Date.now()}]}));
+    setTaskText('');
+  }
+  function toggleTask(day,id) {
+    setTasks(prev=>({...prev,[day]:(prev[day]||[]).map(t=>t.id===id?{...t,done:!t.done}:t)}));
+  }
+  function removeTask(day,id) {
+    setTasks(prev=>({...prev,[day]:(prev[day]||[]).filter(t=>t.id!==id)}));
+  }
+
+  // Generate week days
+  const weekStart = new Date(today); weekStart.setDate(today.getDate()-today.getDay());
+  const weekDays = Array.from({length:7},(_,i)=>{ const d=new Date(weekStart); d.setDate(weekStart.getDate()+i); return d; });
+
+  // Suggested daily plan
+  const plan = [
+    {time:'7:00-7:30',act:'Repaso de errores del día anterior',subj:'Todos',color:'var(--red)'},
+    {time:'7:30-8:30',act:`Estudio de ${config.hoursPerDay>1?'tema nuevo':'repaso'}`,subj:'Biología / Química',color:'var(--green)'},
+    {time:'8:30-9:00',act:'Práctica de reactivos (15 preguntas)',subj:'Materia estudiada',color:'var(--blue)'},
+    {time:'Tarde','act':'Flashcards (15 min) + Física o Matemáticas',subj:'EXCOBA',color:'var(--purple)'},
+  ];
+
+  return (
+    <div>
+      <div className="page-header">
+        <div className="flex justify-between items-center">
+          <div><div className="page-title">📅 Calendario de Estudio</div><div className="page-sub">Faltan {daysLeft} días · Examen: {examDate.toLocaleDateString('es-MX',{day:'numeric',month:'long',year:'numeric'})}</div></div>
+        </div>
+      </div>
+
+      <div className="grid2 mb-4">
+        <div className="card">
+          <div className="section-title">Plan diario sugerido ({config.hoursPerDay}h disponibles)</div>
+          {plan.map((p,i)=>(
+            <div key={i} style={{display:'flex',gap:12,padding:'8px 0',borderBottom:'1px solid var(--border)'}}>
+              <div style={{width:80,fontSize:11,color:'var(--text3)',flexShrink:0}}>{p.time}</div>
+              <div>
+                <div style={{fontSize:13,fontWeight:600,color:p.color}}>{p.act}</div>
+                <div style={{fontSize:11,color:'var(--text3)'}}>{p.subj}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="card">
+          <div className="section-title">Configuración del examen</div>
+          <div className="form-group">
+            <label className="form-label">Fecha del examen</label>
+            <input type="date" className="form-input" value={config.examDate} onChange={e=>setConfig(c=>({...c,examDate:e.target.value}))}/>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Horas disponibles al día: <strong>{config.hoursPerDay}</strong></label>
+            <input type="range" min={1} max={8} value={config.hoursPerDay} onChange={e=>setConfig(c=>({...c,hoursPerDay:+e.target.value}))}/>
+          </div>
+          <div className="alert alert-info" style={{fontSize:12}}>
+            {daysLeft>60?'✅ Tienes tiempo suficiente para una preparación completa.':daysLeft>30?'⚠️ Tiempo moderado. Prioriza tus materias más débiles.':daysLeft>14?'🔥 Etapa final. Enfócate en tus errores y repaso.':'⚡ Cuenta regresiva. Solo practica tus temas clave.'}
+          </div>
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="tabs">
+          {['week','month'].map(v=><button key={v} className={`tab ${view===v?'active':''}`} onClick={()=>setView(v)}>{v==='week'?'Esta semana':'Este mes'}</button>)}
+        </div>
+
+        {view==='week' && (
+          <div>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:6}}>
+              {['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'].map(d=><div key={d} style={{textAlign:'center',fontSize:11,color:'var(--text3)',padding:'4px 0'}}>{d}</div>)}
+              {weekDays.map(d=>{
+                const key = d.toISOString().split('T')[0];
+                const isToday = d.toDateString()===today.toDateString();
+                const dayTasks = tasks[key]||[];
+                return (
+                  <div key={key} onClick={()=>setSelDay(key)} style={{padding:8,borderRadius:8,border:`1.5px solid ${selDay===key?'var(--accent)':isToday?'var(--accent)':'var(--border)'}`,background:selDay===key?'rgba(29,168,160,.1)':isToday?'rgba(29,168,160,.05)':'var(--bg3)',cursor:'pointer',minHeight:80}}>
+                    <div style={{fontSize:12,fontWeight:700,color:isToday?'var(--accent)':'var(--text2)',marginBottom:4}}>{d.getDate()}</div>
+                    {dayTasks.slice(0,3).map(t=>(
+                      <div key={t.id} style={{fontSize:9,color:t.done?'var(--green)':'var(--text3)',textDecoration:t.done?'line-through':'none',lineHeight:1.4,overflow:'hidden',whiteSpace:'nowrap',textOverflow:'ellipsis'}}>{t.done?'✓':''}{t.text}</div>
+                    ))}
+                    {dayTasks.length>3 && <div style={{fontSize:9,color:'var(--accent)'}}>+{dayTasks.length-3} más</div>}
+                  </div>
+                );
+              })}
+            </div>
+
+            {selDay && (
+              <div style={{marginTop:20,padding:16,background:'var(--bg3)',borderRadius:8,border:'1px solid var(--border)'}}>
+                <div style={{fontSize:14,fontWeight:700,marginBottom:12}}>📋 {new Date(selDay+'T12:00:00').toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
+                {(tasks[selDay]||[]).map(t=>(
+                  <div key={t.id} className="flex items-center gap-2 mb-2">
+                    <input type="checkbox" checked={t.done} onChange={()=>toggleTask(selDay,t.id)} style={{accentColor:'var(--accent)'}}/>
+                    <span style={{flex:1,fontSize:13,textDecoration:t.done?'line-through':'none',color:t.done?'var(--text3)':'var(--text)'}}>{t.text}</span>
+                    <button onClick={()=>removeTask(selDay,t.id)} style={{background:'none',color:'var(--red)',fontSize:14,cursor:'pointer'}}>✕</button>
+                  </div>
+                ))}
+                <div className="flex gap-2 mt-3">
+                  <input className="form-input" style={{flex:1,fontSize:13}} value={taskText} onChange={e=>setTaskText(e.target.value)} placeholder="Añadir actividad..." onKeyDown={e=>e.key==='Enter'&&addTask()}/>
+                  <button className="btn btn-primary btn-sm" onClick={addTask}>Añadir</button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {view==='month' && (
+          <div>
+            <div style={{fontSize:16,fontWeight:700,marginBottom:16,textAlign:'center'}}>{today.toLocaleDateString('es-MX',{month:'long',year:'numeric'})}</div>
+            <div className="calendar-grid">
+              {['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'].map(d=><div key={d} style={{textAlign:'center',fontSize:10,color:'var(--text3)',padding:'4px 0'}}>{d}</div>)}
+              {Array.from({length:new Date(today.getFullYear(),today.getMonth(),1).getDay()},(_,i)=><div key={'e'+i}/>)}
+              {Array.from({length:new Date(today.getFullYear(),today.getMonth()+1,0).getDate()},(_,i)=>{
+                const d=new Date(today.getFullYear(),today.getMonth(),i+1);
+                const key=d.toISOString().split('T')[0];
+                const isToday=d.toDateString()===today.toDateString();
+                const hasTasks=(tasks[key]||[]).length>0;
+                return (
+                  <div key={i} onClick={()=>{setSelDay(key);setView('week');}} className={`cal-day ${isToday?'today':''} ${hasTasks?'has-task':''}`}>
+                    <div className="cal-day-num">{i+1}</div>
+                    {hasTasks && <div className="cal-dot" style={{background:'var(--accent)'}}/>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── SETTINGS ─────────────────────────────────────────────────────────────────
+function SettingsPage({ config, setConfig, results, errors, flashcards, setResults, setErrors, setFlashcards }) {
+  const [msg, setMsg] = useState('');
+  function showMsg(t){setMsg(t);setTimeout(()=>setMsg(''),3000);}
+
+  function exportData() {
+    const data={results,errors,flashcards,config,tasks:loadData('tasks',{})};
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=`medadmit-ug-${now()}.json`;a.click();
+    showMsg('✅ Datos exportados correctamente.');
+  }
+
+  function importData(e) {
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      try {
+        const data=JSON.parse(ev.target.result);
+        if(data.results) setResults(data.results);
+        if(data.errors) setErrors(data.errors);
+        if(data.flashcards) setFlashcards(data.flashcards);
+        if(data.config) setConfig(data.config);
+        if(data.tasks) saveData('tasks',data.tasks);
+        showMsg('✅ Datos importados correctamente.');
+      } catch { showMsg('❌ Archivo inválido o dañado.'); }
+    };
+    reader.readAsText(file);
+  }
+
+  function resetAll() {
+    if(!confirm('¿Borrar TODOS los datos? Esta acción no se puede deshacer. Se recomienda exportar primero.')) return;
+    setResults([]); setErrors([]); setFlashcards(FLASHCARDS_DEFAULT);
+    saveData('tasks',{});
+    showMsg('✅ Datos eliminados. Exporta primero la próxima vez.');
+  }
+
+  return (
+    <div>
+      <div className="page-header"><div className="page-title">⚙️ Ajustes</div></div>
+      {msg && <div className={`alert ${msg.startsWith('✅')?'alert-success':'alert-error'} mb-4`}>{msg}</div>}
+
+      <div className="grid2">
+        <div>
+          <div className="card mb-4">
+            <div className="section-title">Configuración del examen</div>
+            <div className="form-group">
+              <label className="form-label">Fecha del examen</label>
+              <input type="date" className="form-input" value={config.examDate} onChange={e=>setConfig(c=>({...c,examDate:e.target.value}))}/>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Horas de estudio por día: <strong>{config.hoursPerDay}</strong></label>
+              <input type="range" min={1} max={8} value={config.hoursPerDay} onChange={e=>setConfig(c=>({...c,hoursPerDay:+e.target.value}))}/>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="section-title">Datos y portabilidad</div>
+            <div className="flex flex-col gap-2">
+              <button className="btn btn-secondary w-full" onClick={exportData}>⬇️ Exportar mis datos (JSON)</button>
+              <label className="btn btn-secondary w-full" style={{cursor:'pointer',justifyContent:'center'}}>
+                ⬆️ Importar datos
+                <input type="file" accept=".json" onChange={importData} style={{display:'none'}}/>
+              </label>
+              <button className="btn btn-danger w-full" onClick={resetAll}>🗑️ Borrar todos mis datos</button>
+            </div>
+            <div className="alert alert-warn mt-3" style={{fontSize:12}}>Los datos se guardan en localStorage de tu navegador. Exporta frecuentemente para no perder tu progreso.</div>
+          </div>
+        </div>
+
+        <div>
+          <div className="card mb-4">
+            <div className="section-title">Resumen de datos guardados</div>
+            <div style={{lineHeight:2.2,fontSize:13}}>
+              <div className="flex justify-between"><span>Simulacros/prácticas</span><span className="font-600 text-accent">{results.length}</span></div>
+              <div className="flex justify-between"><span>Reactivos contestados</span><span className="font-600 text-accent">{results.reduce((s,r)=>s+r.total,0)}</span></div>
+              <div className="flex justify-between"><span>Errores registrados</span><span className="font-600 text-accent">{errors.length}</span></div>
+              <div className="flex justify-between"><span>Errores pendientes</span><span className="font-600" style={{color:'var(--red)'}}>{errors.filter(e=>e.status!=='mastered').length}</span></div>
+              <div className="flex justify-between"><span>Flashcards</span><span className="font-600 text-accent">{flashcards.length}</span></div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="section-title">Acerca de MED-ADMIT UG</div>
+            <div style={{fontSize:12,color:'var(--text2)',lineHeight:2}}>
+              <div>🎓 Plataforma de preparación para Médico Cirujano UG</div>
+              <div>📍 Campus León · División Ciencias de la Salud</div>
+              <div>📅 Proceso Enero–Junio 2027</div>
+              <div>✅ Datos EXCOBA verificados (ugto.mx, 2022)</div>
+              <div>⚠️ Temario divisional parcialmente estimado</div>
+              <div>📖 Banco: {QUESTION_BANK.length} preguntas originales de práctica</div>
+            </div>
+            <div className="alert alert-info mt-3" style={{fontSize:11}}>Las preguntas son de práctica original, no reactivos reales del examen oficial. Verifíca siempre con los materiales publicados en ugto.mx/admisionug.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
